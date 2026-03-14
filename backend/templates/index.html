@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sistema de Escrituras</title>
+</head>
+
+<body>
+
+<h2>Calcular Escritura</h2>
+
+<form method="post">
+{% csrf_token %}
+
+<label>Valor Base</label>
+<br>
+<input type="text" name="valor">
+<br><br>
+
+<label>Alíquota</label>
+<br>
+<input type="text" name="aliquota" value="3.5">
+<br><br>
+
+<label>Tipo de Ato</label>
+<br>
+
+<select name="tipo_ato" id="tipo_ato">
+
+<option value="venda">Venda e Compra</option>
+<option value="usufruto">Venda com Usufruto</option>
+<option value="desconto">Venda com Desconto</option>
+<option value="venda_cessao">Venda e Compra e Cessão</option>
+<option value="alienacao">Venda com Alienação Fiduciária</option>
+<option value="doacao">Doação / Inventário</option>
+<option value="doacao_usufruto">Doação com Reserva de Usufruto</option>
+
+</select>
+
+<br><br>
+
+<div id="campo_cessao" style="display:none">
+
+<label>Valor da Cessão</label>
+<br>
+<input type="text" name="cessao">
+
+</div>
+
+<br>
+
+<div id="campo_divida" style="display:none">
+
+<label>Valor da Dívida</label>
+<br>
+<input type="text" name="divida">
+
+</div>
+
+<br>
+
+<button type="submit">Calcular</button>
+
+</form>
+
+<hr>
+
+{% if resultado %}
+
+<h3>Resultado</h3>
+
+<p>Escritura: {{resultado.escritura}}</p>
+<p>Imposto: {{resultado.imposto}}</p>
+<p>Registro: {{resultado.registro}}</p>
+<p>Matrícula: {{resultado.matricula}}</p>
+<p>Total: {{resultado.total}}</p>
+
+{% endif %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded",function(){
+
+let tipo = document.getElementById("tipo_ato")
+let campoCessao = document.getElementById("campo_cessao")
+let campoDivida = document.getElementById("campo_divida")
+
+function atualizar(){
+
+campoCessao.style.display="none"
+campoDivida.style.display="none"
+
+if(tipo.value==="venda_cessao"){
+campoCessao.style.display="block"
+}
+
+if(tipo.value==="alienacao"){
+campoDivida.style.display="block"
+}
+
+}
+
+tipo.addEventListener("change",atualizar)
+
+atualizar()
+
+})
+
+</script>
+
+</body>
+</html>

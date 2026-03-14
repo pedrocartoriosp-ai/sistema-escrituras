@@ -1,0 +1,19 @@
+<h1>Consulta de Escritura</h1>
+
+{% if erro %}
+<p>{{ erro }}</p>
+{% else %}
+
+<p><b>Código:</b> {{ escritura.codigo }}</p>
+
+<p><b>Outorgante:</b> {{ escritura.outorgante }}</p>
+
+<p><b>Outorgado:</b> {{ escritura.outorgado }}</p>
+
+<p><b>Status:</b> {{ escritura.status }}</p>
+
+<p><b>Livro:</b> {{ escritura.livro }}</p>
+
+<p><b>Páginas:</b> {{ escritura.paginas }}</p>
+
+{% endif %}

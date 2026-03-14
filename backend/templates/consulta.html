@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Sistema Escrituras Pedro Lopes</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f5f6fa;
+text-align:center;
+padding:40px;
+}
+
+.container{
+background:white;
+padding:30px;
+border-radius:10px;
+width:500px;
+margin:auto;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+input{
+padding:10px;
+width:80%;
+margin:10px;
+font-size:16px;
+}
+
+button{
+padding:10px 20px;
+background:#2c7be5;
+color:white;
+border:none;
+border-radius:5px;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1a5ed8;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Sistema Escrituras Pedro Lopes</h2>
+
+<form method="get">
+
+<input type="text" name="codigo" placeholder="Digite o código da escritura">
+
+<br>
+
+<button type="submit">
+Consultar Escritura
+</button>
+
+</form>
+
+{% if escritura %}
+
+<hr>
+
+<h3>Resultado</h3>
+
+<p><b>Código:</b> {{ escritura.codigo }}</p>
+<p><b>Outorgante:</b> {{ escritura.outorgante }}</p>
+<p><b>Outorgado:</b> {{ escritura.outorgado }}</p>
+<p><b>Status:</b> {{ escritura.status }}</p>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>

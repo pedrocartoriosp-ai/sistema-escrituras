@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+{% load formatacao %}
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Calculadora de Escritura</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+<div class="card shadow p-4">
+
+<h4 class="text-center mb-1">
+TABELIONATO DE NOTAS DA COMARCA DE MONGAGUÁ – SP
+</h4>
+
+<h5 class="text-center mb-0">
+PEDRO LOPES MARTINES NETO
+</h5>
+
+<p class="text-center text-muted">
+Escrevente Notarial
+</p>
+
+<hr>
+
+<h5 class="text-center mb-4">
+Calculadora de Escritura
+</h5>
+
+<form method="post">
+
+{% csrf_token %}
+
+<div class="mb-3">
+
+<label class="form-label">Valor Base</label>
+
+<input type="text" id="valor_base" name="valor_base" class="form-control">
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">Alíquota</label>
+
+<input type="text" name="aliquota" value="3.5" class="form-control">
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">Tipo de Escritura</label>
+
+<select name="tipo_ato" id="tipo_ato" class="form-select">
+
+<option value="venda_compra">Venda e Compra</option>
+
+<option value="venda_cessao">Venda e Compra e Cessão</option>
+
+<option value="alienacao">Venda com Alienação Fiduciária</option>
+
+<option value="venda_usufruto">Venda com Usufruto</option>
+
+<option value="doacao">Doação / Inventário</option>
+
+<option value="doacao_usufruto">Doação com Reserva de Usufruto</option>
+
+<option value="venda_desconto">Venda com Desconto</option>
+
+</select>
+
+</div>
+
+<div id="campo_cessao" class="mb-3" style="display:none">
+
+<label class="form-label">Valor da Cessão</label>
+
+<input type="text" id="valor_cessao" name="valor_cessao" class="form-control" placeholder="R$ 0,00">
+
+</div>
+
+<div id="campo_divida" class="mb-3" style="display:none">
+
+<label class="form-label">Valor da Dívida</label>
+
+<input type="text" id="valor_divida" name="valor_divida" class="form-control" placeholder="R$ 0,00">
+
+</div>
+
+<button type="submit" class="btn btn-primary w-100">
+Calcular
+</button>
+
+</form>
+
+</div>
+
+
+{% if resultado and not resultado.venda and not resultado.cessao and not resultado.divida %}
+
+<div class="card shadow mt-4 p-4">
+
+<h5>Resultado</h5>
+
+<p>Escritura: {{resultado.escritura|moeda}}</p>
+
+<p>Imposto: {{resultado.imposto|moeda}}</p>
+
+<p>Registro: {{resultado.registro|moeda}}</p>
+
+<p>Matrícula: {{resultado.matricula|moeda}}</p>
+
+{% if resultado.registro_usufruto %}
+<p>Registro Usufruto: {{resultado.registro_usufruto|moeda}}</p>
+{% endif %}
+
+<p><strong>Total: {{resultado.total|moeda}}</strong></p>
+
+</div>
+
+{% endif %}
+
+
+
+{% if resultado.venda %}
+
+<div class="card shadow mt-4 p-4">
+
+<h5>Valor da Venda</h5>
+
+<p>Escritura: {{resultado.venda.escritura|moeda}}</p>
+
+<p>ITBI: {{resultado.venda.imposto|moeda}}</p>
+
+<p>Registro: {{resultado.venda.registro|moeda}}</p>
+
+<p>Matrícula: {{resultado.venda.matricula|moeda}}</p>
+
+<p><strong>Total: {{resultado.venda.total|moeda}}</strong></p>
+
+</div>
+
+{% endif %}
+
+
+
+{% if resultado.cessao %}
+
+<div class="card shadow mt-4 p-4">
+
+<h5>Valor da Cessão</h5>
+
+<p>Escritura: {{resultado.cessao.escritura|moeda}}</p>
+
+<p>ITBI: {{resultado.cessao.imposto|moeda}}</p>
+
+<p><strong>Total: {{resultado.cessao.total|moeda}}</strong></p>
+
+</div>
+
+{% endif %}
+
+
+
+{% if resultado.divida %}
+
+<div class="card shadow mt-4 p-4">
+
+<h5>Valor da Alienação Fiduciária</h5>
+
+<p>Escritura: {{resultado.divida.escritura|moeda}}</p>
+
+<p>Registro: {{resultado.divida.registro|moeda}}</p>
+
+<p><strong>Total: {{resultado.divida.total|moeda}}</strong></p>
+
+</div>
+
+{% endif %}
+
+
+
+<script>
+
+function mascaraMoeda(campo){
+
+if(!campo) return
+
+campo.addEventListener('input', function(e){
+
+let valor = e.target.value.replace(/\D/g,'')
+
+valor = (valor/100).toFixed(2) + ''
+
+valor = valor.replace(".",",")
+
+valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g,".")
+
+e.target.value = valor
+
+})
+
+}
+
+mascaraMoeda(document.getElementById("valor_base"))
+mascaraMoeda(document.getElementById("valor_cessao"))
+mascaraMoeda(document.getElementById("valor_divida"))
+
+
+
+document.getElementById("tipo_ato").addEventListener("change", function(){
+
+let tipo = this.value
+
+let campoCessao = document.getElementById("campo_cessao")
+let campoDivida = document.getElementById("campo_divida")
+let aliquota = document.querySelector("[name='aliquota']")
+
+campoCessao.style.display = "none"
+campoDivida.style.display = "none"
+
+if(tipo == "venda_cessao"){
+campoCessao.style.display = "block"
+}
+
+if(tipo == "alienacao"){
+campoDivida.style.display = "block"
+}
+
+if(tipo == "doacao" || tipo == "doacao_usufruto"){
+aliquota.value = 4
+}else{
+aliquota.value = 3.5
+}
+
+})
+
+</script>
+
+</div>
+
+</body>
+</html>
