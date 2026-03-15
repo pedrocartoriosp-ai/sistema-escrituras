@@ -5,16 +5,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-secret'
 
-DEBUG = False
-
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://sistema-escrituras-production-4d2b.up.railway.app",
-]
-
-ALLOWED_HOSTS = ["*"]
-
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
