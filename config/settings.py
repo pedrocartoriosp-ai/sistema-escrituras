@@ -7,6 +7,10 @@ SECRET_KEY = 'django-secret'
 
 DEBUG = False
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://sistema-escrituras-production.up.railway.app",
+]
+
 ALLOWED_HOSTS = ["*"]
 
 DEBUG = True
