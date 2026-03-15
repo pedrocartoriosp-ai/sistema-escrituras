@@ -3,13 +3,11 @@ import pandas as pd
 import os
 from django.conf import settings
 
-
 CAMINHO_ESCRITURA = os.path.join(settings.BASE_DIR, "TabelaEscritura.xlsx")
 CAMINHO_REGISTRO = os.path.join(settings.BASE_DIR, "TabelaRegistro.xlsx")
 
 tabela_escritura = pd.read_excel(CAMINHO_ESCRITURA)
 tabela_registro = pd.read_excel(CAMINHO_REGISTRO)
-
 
 def dec(v):
     return Decimal(str(v))
