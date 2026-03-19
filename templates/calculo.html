@@ -48,37 +48,15 @@ border-radius:12px;
 box-shadow:0 6px 18px rgba(0,0,0,0.08);
 }
 
-.resultado p{
-margin:3px 0;
-font-size:15px;
-}
-
 .total{
 font-size:18px;
 font-weight:600;
 color:#0d6efd;
 }
 
-.btn-calcular{
-background:#0d6efd;
-border:none;
-}
-
 .btn-whatsapp{
 background:#25D366;
 border:none;
-}
-
-@media(max-width:768px){
-
-.container{
-padding:10px;
-}
-
-.topo h4{
-font-size:18px;
-}
-
 }
 
 </style>
@@ -111,8 +89,25 @@ font-size:18px;
 </div>
 
 <div class="mb-3">
-<label class="form-label">Alíquota (%)</label>
-<input type="text" name="aliquota" value="3.5" class="form-control">
+
+<label class="form-label">Município</label>
+
+<select name="aliquota" class="form-select">
+
+<option value="3.5">Praia Grande - 3,5%</option>
+<option value="3">Mongaguá - 3%</option>
+<option value="0">Sem tributação</option>
+<option value="3">Itanhaém - 3%</option>
+<option value="2.5">Peruíbe - 2,5%</option>
+<option value="3">São Vicente - 3%</option>
+<option value="2">Santos - 2%</option>
+<option value="3">Bertioga - 3%</option>
+<option value="3">São Bernardo do Campo - 3%</option>
+<option value="3">São Paulo - 3%</option>
+<option value="5">Barueri - 5%</option>
+
+</select>
+
 </div>
 
 <div class="mb-3">
@@ -149,10 +144,13 @@ font-size:18px;
 
 </div>
 
-<button type="submit" class="btn btn-calcular w-100">
+<div class="mb-3">
+<label class="form-label">Despesa adicional</label>
+<input type="text" id="despesa_extra" name="despesa_extra" class="form-control" value="R$ 0,00">
+</div>
 
+<button type="submit" class="btn btn-primary w-100">
 Calcular
-
 </button>
 
 </form>
@@ -162,41 +160,31 @@ Calcular
 
 {% if resultado %}
 
-<div class="card card-sistema mt-4 p-4 resultado">
-
-<h5 class="mb-3">Resultado</h5>
+<div class="card card-sistema mt-4 p-4">
 
 <div id="textoWhatsapp">
 
-{% if resultado and not resultado.venda and not resultado.cessao and not resultado.divida %}
-
-<p>Escritura: {{resultado.escritura|moeda}}</p>
-<p>Imposto: {{resultado.imposto|moeda}}</p>
-<p>Registro: {{resultado.registro|moeda}}</p>
-<p>Matrícula: {{resultado.matricula|moeda}}</p>
-
-{% if resultado.registro_usufruto %}
-<p>Registro Usufruto: {{resultado.registro_usufruto|moeda}}</p>
-{% endif %}
-
-<p class="total">Total: {{resultado.total|moeda}}</p>
-
-{% endif %}
-
+<p><strong>Base de cálculo:</strong> {{valor_base|moeda}}</p>
 
 
 {% if resultado.venda %}
 
-<br><strong>VENDA</strong>
+<strong>VENDA</strong>
 
 <p>Escritura: {{resultado.venda.escritura|moeda}}</p>
 <p>ITBI: {{resultado.venda.imposto|moeda}}</p>
 <p>Registro: {{resultado.venda.registro|moeda}}</p>
-<p>Matrícula: {{resultado.venda.matricula|moeda}}</p>
-<p class="total">Total: {{resultado.venda.total|moeda}}</p>
+<p>Certidões: {{resultado.venda.matricula|moeda}}</p>
 
+{% if resultado.despesa and not resultado.cessao %}
+<p>Despesa adicional: {{resultado.despesa|moeda}}</p>
 {% endif %}
 
+<p class="total">
+Total Venda: {{resultado.venda.total|moeda}}
+</p>
+
+{% endif %}
 
 
 {% if resultado.cessao %}
@@ -205,10 +193,16 @@ Calcular
 
 <p>Escritura: {{resultado.cessao.escritura|moeda}}</p>
 <p>ITBI: {{resultado.cessao.imposto|moeda}}</p>
-<p class="total">Total: {{resultado.cessao.total|moeda}}</p>
 
+{% if resultado.despesa %}
+<p>Despesa adicional: {{resultado.despesa|moeda}}</p>
 {% endif %}
 
+<p class="total">
+Total Cessão: {{resultado.cessao.total|moeda}}
+</p>
+
+{% endif %}
 
 
 {% if resultado.divida %}
@@ -217,7 +211,38 @@ Calcular
 
 <p>Escritura: {{resultado.divida.escritura|moeda}}</p>
 <p>Registro: {{resultado.divida.registro|moeda}}</p>
-<p class="total">Total: {{resultado.divida.total|moeda}}</p>
+
+<p class="total">
+Total Alienação: {{resultado.divida.total|moeda}}
+</p>
+
+{% endif %}
+
+
+{% if resultado.escritura %}
+
+<p>Escritura: {{resultado.escritura|moeda}}</p>
+
+{% if tipo_ato == "doacao" or tipo_ato == "doacao_usufruto" %}
+<p>ITCMD: {{resultado.imposto|moeda}}</p>
+{% else %}
+<p>ITBI: {{resultado.imposto|moeda}}</p>
+{% endif %}
+
+<p>Registro: {{resultado.registro|moeda}}</p>
+<p>Certidões: {{resultado.matricula|moeda}}</p>
+
+{% if resultado.registro_usufruto %}
+<p>Registro Usufruto: {{resultado.registro_usufruto|moeda}}</p>
+{% endif %}
+
+{% if resultado.despesa %}
+<p>Despesa adicional: {{resultado.despesa|moeda}}</p>
+{% endif %}
+
+<p class="total">
+Total: {{resultado.total|moeda}}
+</p>
 
 {% endif %}
 
@@ -253,7 +278,6 @@ texto +
 "SANTANDER - 033\n" +
 "Agência: 0489\n" +
 "Conta Corrente: 13.001930-6\n" +
-"1º Tabelionato de Notas e de Prot.\n" +
 "CNPJ/MF nº 51.669.679/0001-47\n\n" +
 
 "CHAVE PIX:\n51.669.679/0001-47"
@@ -263,7 +287,6 @@ navigator.clipboard.writeText(mensagem)
 alert("Texto copiado! Agora é só colar no WhatsApp.")
 
 }
-
 
 
 function mascaraMoeda(campo){
@@ -287,7 +310,7 @@ e.target.value = valor
 mascaraMoeda(document.getElementById("valor_base"))
 mascaraMoeda(document.getElementById("valor_cessao"))
 mascaraMoeda(document.getElementById("valor_divida"))
-
+mascaraMoeda(document.getElementById("despesa_extra"))
 
 
 document.getElementById("tipo_ato").addEventListener("change", function(){
@@ -296,7 +319,6 @@ let tipo = this.value
 
 let campoCessao = document.getElementById("campo_cessao")
 let campoDivida = document.getElementById("campo_divida")
-let aliquota = document.querySelector("[name='aliquota']")
 
 campoCessao.style.display = "none"
 campoDivida.style.display = "none"
@@ -307,12 +329,6 @@ campoCessao.style.display = "block"
 
 if(tipo == "alienacao"){
 campoDivida.style.display = "block"
-}
-
-if(tipo == "doacao" || tipo == "doacao_usufruto"){
-aliquota.value = 4
-}else{
-aliquota.value = 3.5
 }
 
 })
