@@ -85,7 +85,14 @@ border:none;
 
 <div class="mb-3">
 <label class="form-label">Valor Base</label>
-<input type="text" id="valor_base" name="valor_base" class="form-control">
+<input 
+    type="text"
+    id="valor_base"
+    name="valor_base"
+    inputmode="numeric"
+    class="form-control"
+    placeholder="R$ 0,00"
+>
 </div>
 
 <div class="mb-3">
@@ -122,6 +129,7 @@ border:none;
 <option value="venda_usufruto">Venda com Usufruto</option>
 <option value="doacao">Doação / Inventário</option>
 <option value="doacao_usufruto">Doação com Reserva de Usufruto</option>
+<option value="renuncia_usufruto">Renúncia de usufruto</option>
 <option value="venda_desconto">Venda com Desconto</option>
 
 </select>
@@ -132,21 +140,40 @@ border:none;
 
 <label class="form-label">Valor da Cessão</label>
 
-<input type="text" id="valor_cessao" name="valor_cessao" class="form-control">
-
+<input 
+    type="text"
+    id="valor_cessao"
+    name="valor_cessao"
+    inputmode="numeric"
+    class="form-control"
+    placeholder="R$ 0,00"
+>
 </div>
 
 <div id="campo_divida" class="mb-3" style="display:none">
 
 <label class="form-label">Valor da Dívida</label>
 
-<input type="text" id="valor_divida" name="valor_divida" class="form-control">
-
+<input 
+    type="text"
+    id="valor_divida"
+    name="valor_divida"
+    inputmode="numeric"
+    class="form-control"
+    placeholder="R$ 0,00"
+>
 </div>
 
 <div class="mb-3">
 <label class="form-label">Despesa adicional</label>
-<input type="text" id="despesa_extra" name="despesa_extra" class="form-control" value="R$ 0,00">
+<input 
+    type="text"
+    id="despesa_extra"
+    name="despesa_extra"
+    inputmode="numeric"
+    class="form-control"
+    placeholder="R$ 0,00"
+>
 </div>
 
 <button type="submit" class="btn btn-primary w-100">
@@ -166,11 +193,8 @@ Calcular
 
 <p><strong>Base de cálculo:</strong> {{valor_base|moeda}}</p>
 
-
 {% if resultado.venda %}
-
 <strong>VENDA</strong>
-
 <p>Escritura: {{resultado.venda.escritura|moeda}}</p>
 <p>ITBI: {{resultado.venda.imposto|moeda}}</p>
 <p>Registro: {{resultado.venda.registro|moeda}}</p>
@@ -183,14 +207,10 @@ Calcular
 <p class="total">
 Total Venda: {{resultado.venda.total|moeda}}
 </p>
-
 {% endif %}
 
-
 {% if resultado.cessao %}
-
 <br><strong>CESSÃO</strong>
-
 <p>Escritura: {{resultado.cessao.escritura|moeda}}</p>
 <p>ITBI: {{resultado.cessao.imposto|moeda}}</p>
 
@@ -201,26 +221,19 @@ Total Venda: {{resultado.venda.total|moeda}}
 <p class="total">
 Total Cessão: {{resultado.cessao.total|moeda}}
 </p>
-
 {% endif %}
 
-
 {% if resultado.divida %}
-
 <br><strong>ALIENAÇÃO FIDUCIÁRIA</strong>
-
 <p>Escritura: {{resultado.divida.escritura|moeda}}</p>
 <p>Registro: {{resultado.divida.registro|moeda}}</p>
 
 <p class="total">
 Total Alienação: {{resultado.divida.total|moeda}}
 </p>
-
 {% endif %}
 
-
 {% if resultado.escritura %}
-
 <p>Escritura: {{resultado.escritura|moeda}}</p>
 
 {% if tipo_ato == "doacao" or tipo_ato == "doacao_usufruto" %}
@@ -243,7 +256,6 @@ Total Alienação: {{resultado.divida.total|moeda}}
 <p class="total">
 Total: {{resultado.total|moeda}}
 </p>
-
 {% endif %}
 
 </div>
@@ -262,30 +274,17 @@ Copiar texto para WhatsApp
 <script>
 
 function copiarWhatsapp(){
-
 let texto = document.getElementById("textoWhatsapp").innerText
 
 let mensagem =
 "📑 SIMULAÇÃO DE CUSTAS\n\n" +
 texto +
-
 "\n\n—\n" +
-"1º Tabelionato de Notas e de Prot.\n" +
-"Comarca de Mongaguá - SP\n\n" +
-
-"💳 DADOS PARA PAGAMENTO\n\n" +
-
-"SANTANDER - 033\n" +
-"Agência: 0489\n" +
-"Conta Corrente: 13.001930-6\n" +
-"CNPJ/MF nº 51.669.679/0001-47\n\n" +
-
-"CHAVE PIX:\n51.669.679/0001-47"
+"1º Tabelionato de Notas\n" +
+"Comarca de Mongaguá - SP"
 
 navigator.clipboard.writeText(mensagem)
-
-alert("Texto copiado! Agora é só colar no WhatsApp.")
-
+alert("Texto copiado!")
 }
 
 
@@ -297,11 +296,11 @@ campo.addEventListener('input', function(e){
 
 let valor = e.target.value.replace(/\D/g,'')
 
-valor = (valor/100).toFixed(2) + ''
+valor = (valor/100).toFixed(2)
 valor = valor.replace(".",",")
 valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g,".")
 
-e.target.value = valor
+e.target.value = "R$ " + valor
 
 })
 
