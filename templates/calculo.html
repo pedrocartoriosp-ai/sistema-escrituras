@@ -4,7 +4,6 @@
 {% load formatacao %}
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -13,7 +12,6 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-
 body{
 background:#f5f7fb;
 font-family:system-ui,-apple-system,Segoe UI,Roboto;
@@ -58,7 +56,6 @@ color:#0d6efd;
 background:#25D366;
 border:none;
 }
-
 </style>
 
 </head>
@@ -68,11 +65,9 @@ border:none;
 <div class="container mt-4">
 
 <div class="topo">
-
 <h4>TABELIONATO DE NOTAS DA COMARCA DE MONGAGUÁ – SP</h4>
 <h5>PEDRO LOPES MARTINES NETO</h5>
 <p>Escrevente Notarial</p>
-
 </div>
 
 <div class="card card-sistema p-4">
@@ -80,27 +75,16 @@ border:none;
 <h5 class="text-center mb-4">Calculadora de Escritura</h5>
 
 <form method="post">
-
 {% csrf_token %}
 
 <div class="mb-3">
 <label class="form-label">Valor Base</label>
-<input 
-    type="text"
-    id="valor_base"
-    name="valor_base"
-    inputmode="numeric"
-    class="form-control"
-    placeholder="R$ 0,00"
->
+<input type="text" name="valor_base" id="valor_base" class="form-control" inputmode="numeric" placeholder="R$ 0,00">
 </div>
 
 <div class="mb-3">
-
 <label class="form-label">Município</label>
-
 <select name="aliquota" class="form-select">
-
 <option value="3.5">Praia Grande - 3,5%</option>
 <option value="3">Mongaguá - 3%</option>
 <option value="0">Sem tributação</option>
@@ -112,17 +96,12 @@ border:none;
 <option value="3">São Bernardo do Campo - 3%</option>
 <option value="3">São Paulo - 3%</option>
 <option value="5">Barueri - 5%</option>
-
 </select>
-
 </div>
 
 <div class="mb-3">
-
 <label class="form-label">Tipo de Escritura</label>
-
 <select name="tipo_ato" id="tipo_ato" class="form-select">
-
 <option value="venda_compra">Venda e Compra</option>
 <option value="venda_cessao">Venda e Compra e Cessão</option>
 <option value="alienacao">Venda com Alienação Fiduciária</option>
@@ -131,49 +110,22 @@ border:none;
 <option value="doacao_usufruto">Doação com Reserva de Usufruto</option>
 <option value="renuncia_usufruto">Renúncia de usufruto</option>
 <option value="venda_desconto">Venda com Desconto</option>
-
 </select>
-
 </div>
 
 <div id="campo_cessao" class="mb-3" style="display:none">
-
 <label class="form-label">Valor da Cessão</label>
-
-<input 
-    type="text"
-    id="valor_cessao"
-    name="valor_cessao"
-    inputmode="numeric"
-    class="form-control"
-    placeholder="R$ 0,00"
->
+<input type="text" name="valor_cessao" id="valor_cessao" class="form-control" inputmode="numeric" placeholder="R$ 0,00">
 </div>
 
-<div id="campo_divida" class="mb-3" style="display:none">
-
-<label class="form-label">Valor da Dívida</label>
-
-<input 
-    type="text"
-    id="valor_divida"
-    name="valor_divida"
-    inputmode="numeric"
-    class="form-control"
-    placeholder="R$ 0,00"
->
+<div id="campo_cessao" class="mb-3" style="display:none">
+<label class="form-label">Valor da Cessão</label>
+<input type="text" name="valor_cessao" id="valor_cessao" class="form-control" inputmode="numeric" placeholder="R$ 0,00">
 </div>
 
 <div class="mb-3">
 <label class="form-label">Despesa adicional</label>
-<input 
-    type="text"
-    id="despesa_extra"
-    name="despesa_extra"
-    inputmode="numeric"
-    class="form-control"
-    placeholder="R$ 0,00"
->
+<input type="text" name="despesa_extra" id="despesa_extra" class="form-control" inputmode="numeric" placeholder="R$ 0,00">
 </div>
 
 <button type="submit" class="btn btn-primary w-100">
@@ -181,9 +133,7 @@ Calcular
 </button>
 
 </form>
-
 </div>
-
 
 {% if resultado %}
 
@@ -193,53 +143,18 @@ Calcular
 
 <p><strong>Base de cálculo:</strong> {{valor_base|moeda}}</p>
 
-{% if resultado.venda %}
-<strong>VENDA</strong>
-<p>Escritura: {{resultado.venda.escritura|moeda}}</p>
-<p>ITBI: {{resultado.venda.imposto|moeda}}</p>
-<p>Registro: {{resultado.venda.registro|moeda}}</p>
-<p>Certidões: {{resultado.venda.matricula|moeda}}</p>
-
-{% if resultado.despesa and not resultado.cessao %}
-<p>Despesa adicional: {{resultado.despesa|moeda}}</p>
-{% endif %}
-
-<p class="total">
-Total Venda: {{resultado.venda.total|moeda}}
-</p>
-{% endif %}
-
-{% if resultado.cessao %}
-<br><strong>CESSÃO</strong>
-<p>Escritura: {{resultado.cessao.escritura|moeda}}</p>
-<p>ITBI: {{resultado.cessao.imposto|moeda}}</p>
-
-{% if resultado.despesa %}
-<p>Despesa adicional: {{resultado.despesa|moeda}}</p>
-{% endif %}
-
-<p class="total">
-Total Cessão: {{resultado.cessao.total|moeda}}
-</p>
-{% endif %}
-
-{% if resultado.divida %}
-<br><strong>ALIENAÇÃO FIDUCIÁRIA</strong>
-<p>Escritura: {{resultado.divida.escritura|moeda}}</p>
-<p>Registro: {{resultado.divida.registro|moeda}}</p>
-
-<p class="total">
-Total Alienação: {{resultado.divida.total|moeda}}
-</p>
-{% endif %}
 
 {% if resultado.escritura %}
 <p>Escritura: {{resultado.escritura|moeda}}</p>
 
+{% if resultado.escritura_usufruto %}
+<p>Escritura Usufruto: {{resultado.escritura_usufruto|moeda}}</p>
+{% endif %}
+
 {% if tipo_ato == "doacao" or tipo_ato == "doacao_usufruto" %}
-<p>ITCMD: {{resultado.imposto|moeda}}</p>
+<p>ITCMD (4%): {{resultado.imposto|moeda}}</p>
 {% else %}
-<p>ITBI: {{resultado.imposto|moeda}}</p>
+<p>ITBI ({{aliquota}}%): {{resultado.imposto|moeda}}</p>
 {% endif %}
 
 <p>Registro: {{resultado.registro|moeda}}</p>
@@ -253,9 +168,7 @@ Total Alienação: {{resultado.divida.total|moeda}}
 <p>Despesa adicional: {{resultado.despesa|moeda}}</p>
 {% endif %}
 
-<p class="total">
-Total: {{resultado.total|moeda}}
-</p>
+<p class="total">Total: {{resultado.total|moeda}}</p>
 {% endif %}
 
 </div>
@@ -270,70 +183,108 @@ Copiar texto para WhatsApp
 
 </div>
 
+<script>
+function copiarWhatsapp(){
+
+    let texto = document.getElementById("textoWhatsapp").innerText;
+
+    let mensagem =
+    "📑 SIMULAÇÃO DE CUSTAS\n\n" +
+    texto +
+
+    "\n\n—\n" +
+    "1º Tabelionato de Notas\n" +
+    "Comarca de Mongaguá - SP\n\n" +
+
+    "💳 DADOS PARA PAGAMENTO\n\n" +
+
+    "SANTANDER - 033\n" +
+    "Agência: 0489\n" +
+    "Conta Corrente: 13.001930-6\n" +
+    "CNPJ/MF nº 51.669.679/0001-47\n\n" +
+
+    "CHAVE PIX:\n" +
+    "51.669.679/0001-47";
+
+    navigator.clipboard.writeText(mensagem);
+
+    alert("Texto copiado!");
+}
+</script>
 
 <script>
-
-function copiarWhatsapp(){
-let texto = document.getElementById("textoWhatsapp").innerText
-
-let mensagem =
-"📑 SIMULAÇÃO DE CUSTAS\n\n" +
-texto +
-"\n\n—\n" +
-"1º Tabelionato de Notas\n" +
-"Comarca de Mongaguá - SP"
-
-navigator.clipboard.writeText(mensagem)
-alert("Texto copiado!")
-}
-
-
-function mascaraMoeda(campo){
-
-if(!campo) return
-
-campo.addEventListener('input', function(e){
-
-let valor = e.target.value.replace(/\D/g,'')
-
-valor = (valor/100).toFixed(2)
-valor = valor.replace(".",",")
-valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g,".")
-
-e.target.value = "R$ " + valor
-
-})
-
-}
-
-mascaraMoeda(document.getElementById("valor_base"))
-mascaraMoeda(document.getElementById("valor_cessao"))
-mascaraMoeda(document.getElementById("valor_divida"))
-mascaraMoeda(document.getElementById("despesa_extra"))
-
-
 document.getElementById("tipo_ato").addEventListener("change", function(){
 
-let tipo = this.value
+    let tipo = this.value;
 
-let campoCessao = document.getElementById("campo_cessao")
-let campoDivida = document.getElementById("campo_divida")
+    let campoCessao = document.getElementById("campo_cessao");
+    let campoDivida = document.getElementById("campo_divida");
 
-campoCessao.style.display = "none"
-campoDivida.style.display = "none"
+    campoCessao.style.display = "none";
+    campoDivida.style.display = "none";
 
-if(tipo == "venda_cessao"){
-campoCessao.style.display = "block"
+    if(tipo === "venda_cessao"){
+        campoCessao.style.display = "block";
+    }
+
+    if(tipo === "alienacao"){
+        campoDivida.style.display = "block";
+    }
+});
+
+// dispara ao carregar
+document.getElementById("tipo_ato").dispatchEvent(new Event("change"));
+</script>
+
+<script>
+function formatarMoeda(input) {
+
+    let valor = input.value.replace(/\D/g, "");
+
+    if (valor === "") {
+        input.value = "";
+        return;
+    }
+
+    valor = (parseInt(valor) / 100).toFixed(2);
+    valor = valor.replace(".", ",");
+    valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    input.value = "R$ " + valor;
 }
 
-if(tipo == "alienacao"){
-campoDivida.style.display = "block"
+function aplicarMascara(ids) {
+
+    ids.forEach(id => {
+
+        const input = document.getElementById(id);
+
+        if (!input) return;
+
+        input.addEventListener("input", function() {
+            formatarMoeda(this);
+        });
+
+        input.addEventListener("focus", function() {
+            if (!this.value) {
+                this.value = "R$ 0,00";
+            }
+        });
+
+        input.addEventListener("blur", function() {
+            if (this.value === "R$ 0,00") {
+                this.value = "";
+            }
+        });
+    });
 }
 
-})
-
-document.getElementById("tipo_ato").dispatchEvent(new Event("change"))
-
+aplicarMascara([
+    "valor_base",
+    "valor_cessao",
+    "valor_divida",
+    "despesa_extra"
+]);
 </script>
 
 </body>
