@@ -294,3 +294,43 @@ def doacao_usufruto(valor, aliquota):
         "imposto": imposto,
         "total": total
     }
+
+# ===============================
+# RENÚNCIA DE USUFRUTO
+# ===============================
+
+def renuncia_usufruto(valor):
+
+    valor = dec(valor)
+
+    # escritura normal
+    escritura = buscar_escritura(valor)
+
+    # buscar averbação
+    for _, linha in tabela_registro.iterrows():
+
+        limite = dec(linha["ValorVenal"])
+
+        if valor <= limite:
+
+            registro = dec(linha["ValorAverbação"])
+            matricula = Decimal("78.01")
+
+            return {
+                "escritura": escritura,
+                "registro": registro,
+                "matricula": matricula,
+                "imposto": Decimal("0.00"),
+                "total": escritura + registro + matricula
+            }
+
+    # fallback
+    registro = dec(tabela_registro.iloc[-1]["ValorAverbação"])
+
+    return {
+        "escritura": escritura,
+        "registro": registro,
+        "matricula": Decimal("78.01"),
+        "imposto": Decimal("0.00"),
+        "total": escritura + registro + Decimal("78.01")
+    }
