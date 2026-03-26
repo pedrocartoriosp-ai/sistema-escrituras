@@ -205,17 +205,48 @@ def venda_cessao(valor, valor_cessao, aliquota):
 
 def alienacao_fiduciaria(valor, divida, aliquota):
 
-    venda = venda_compra(valor, aliquota)
-
+    valor = dec(valor)
     divida = dec(divida)
 
+    # ===============================
+    # VENDA (COM DESCONTO)
+    # ===============================
+    escritura_venda = buscar_escritura(valor) * Decimal("0.60")
+
+    registro, matricula = buscar_registro(valor)
+
+    imposto = calcular_imposto(valor, aliquota)
+
+    total_venda = (
+        escritura_venda
+        + imposto
+        + registro
+        + matricula
+    )
+
+    # ===============================
+    # DÍVIDA (COM DESCONTO)
+    # ===============================
     escritura_divida = buscar_escritura(divida) * Decimal("0.60")
+
     registro_divida, _ = buscar_registro(divida)
 
-    total_divida = escritura_divida + registro_divida
+    total_divida = (
+        escritura_divida
+        + registro_divida
+    )
 
     return {
-        "venda": venda,
+
+        "venda": {
+            "base": valor,
+            "escritura": escritura_venda,
+            "imposto": imposto,
+            "registro": registro,
+            "matricula": matricula,
+            "total": total_venda
+        },
+
         "divida": {
             "base": divida,
             "escritura": escritura_divida,
@@ -223,7 +254,6 @@ def alienacao_fiduciaria(valor, divida, aliquota):
             "total": total_divida
         }
     }
-
 
 # ===============================
 # DOAÇÃO / INVENTÁRIO (CORRIGIDO)
